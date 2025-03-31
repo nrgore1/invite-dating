@@ -1,0 +1,9 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+  <h1>{{ title }}</h1>
+  <form method="post">{% csrf_token %}
+    <label for="count">How many codes?</label>
+    <input type="number" name="count" id="count" value="1" min="1" max="100">
+    <button type="submit" class="default">Generate</button>
+  </form>
+{% endblock %}
