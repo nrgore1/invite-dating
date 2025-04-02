@@ -1,113 +1,51 @@
-<!-- templates/registration/register.html -->
-<!DOCTYPE html>
-<html lang="en">
-    {% extends "base.html" %}
+{% extends "base.html" %}
 
-{% block title %}Welcome - Invite Dating{% endblock %}
+{% block title %}Register - Invite Dating{% endblock %}
 
-{% block content %}
-  <div class="text-center">
-    <h1 class="display-4">Welcome to Invite-Only Dating</h1>
-    <p class="lead">Meet your match through trusted referrals.</p>
-    <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Get Started</a>
-  </div>
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'landing_page' %}">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Register</li>
+  </ol>
+</nav>
 {% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Register - Invite Dating</title>
-    <style>
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 2rem 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h2 {
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            color: #333;
-            text-align: center;
-        }
-        label {
-            display: block;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        input[type="text"],
-        input[type="password"],
-        input[type="email"] {
-            width: 100%;
-            padding: 0.6rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        button {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.7rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .messages {
-            margin-bottom: 1rem;
-            color: red;
-            text-align: center;
-        }
-    </style>
-</head>
+{% block content %}
+<div class="container" style="max-width: 500px;">
+    <h2><img src="/static/images/love-icon.png" width="30"> Register</h2>
 
 
-<body>
-   
-<div class="container">
-    <h2>Register</h2>
+  {% if messages %}
+    <div class="alert alert-danger text-center">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
 
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" name="username" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" name="email" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="referral_code" class="form-label">Referral Code</label>
+      <input type="text" name="referral_code" class="form-control" required>
+    </div>
 
-    <form method="post">
-        {% csrf_token %}
-        <label for="username">Username</label>
-        <input type="text" name="username" required>
+    <button type="submit" class="btn btn-primary w-100">Register</button>
+  </form>
 
-        <label for="email">Email</label>
-        <input type="email" name="email" required>
-
-        <label for="password">Password</label>
-        <input type="password" name="password" required>
-
-        <label for="referral_code">Referral Code</label>
-        <input type="text" name="referral_code" required>
-
-        <button type="submit">Register</button>
-    </form>
-    <p>Already registered? <a href="{% url 'login' %}">Login here</a></p>
+  <p class="mt-3 text-center">Already registered? <a href="{% url 'login' %}">Login here</a></p>
 </div>
-</body>
-</html>
+{% endblock %}
