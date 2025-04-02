@@ -29,10 +29,10 @@ class ReferrerCode(models.Model):
         return f"{self.code} ({'Used' if self.is_used else 'Unused'})"
 
 class CandidateInquiry(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=20)
-    referral_code = models.OneToOneField(ReferrerCode, on_delete=models.PROTECT)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    referral_code = models.ForeignKey(ReferrerCode, on_delete=models.PROTECT, null=True, blank=True)
     consultant = models.ForeignKey(Consultant, on_delete=models.SET_NULL, null=True, blank=True)
     referrer = models.ForeignKey(Referrer, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -47,6 +47,16 @@ class DatingUser(models.Model):
     gender = models.CharField(max_length=20, blank=True)
     location = models.CharField(max_length=100, blank=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
+
 
     def __str__(self):
         return self.candidate.name
+# Example for a ForeignKey
+referral_code = models.ForeignKey(ReferrerCode, on_delete=models.PROTECT, null=True, blank=True)
+
+# For CharFields
+name = models.CharField(max_length=255, null=True, blank=True)
+
+# For ImageFields
+profile_image = models.ImageField(upload_to='...', null=True, blank=True)

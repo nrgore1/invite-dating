@@ -5,7 +5,7 @@ from .models import CandidateInquiry
 class CandidateInquiryForm(forms.ModelForm):
     class Meta:
         model = CandidateInquiry
-        fields = ['full_name', 'email', 'phone', 'gender', 'mother_tongue', 'preferences']
+        fields = ['name', 'email', 'phone', 'referral_code', 'consultant', 'referrer']
 
 from .models import DatingUser
 
