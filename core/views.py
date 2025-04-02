@@ -101,3 +101,4 @@ def register_referrer(request):
     else:
         form = ReferrerForm()
     return render(request, 'register_referrer.html', {'form': form})
+
