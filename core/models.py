@@ -1,34 +1,52 @@
 from django.db import models
-from django.contrib.auth.models import User
-from .utils import generate_unique_code
+import string
+import random
 
+def generate_unique_code(length=8):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
-class ReferrerProfile(models.Model):
-    name = models.CharField(max_length=255)
-    email = models.EmailField(unique=True, default='placeholder@example.com')
+class Consultant(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
 
     def __str__(self):
         return self.name
 
+class Referrer(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.name
 
 class ReferrerCode(models.Model):
-    referrer = models.ForeignKey(ReferrerProfile, on_delete=models.CASCADE, related_name='referral_codes')
-    referral_code = models.CharField(max_length=10, unique=True, blank=True)
-    used = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        if not self.referral_code:
-            self.referral_code = generate_unique_code()
-        super().save(*args, **kwargs)
+    code = models.CharField(max_length=10, unique=True, default=generate_unique_code)
+    qr_code = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+    referrer = models.ForeignKey(Referrer, on_delete=models.CASCADE, related_name='codes')
+    is_used = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.referral_code or '[NO CODE]'} - {self.referrer.name}"
+        return f"{self.code} ({'Used' if self.is_used else 'Unused'})"
 
+class CandidateInquiry(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=20)
+    referral_code = models.OneToOneField(ReferrerCode, on_delete=models.PROTECT)
+    consultant = models.ForeignKey(Consultant, on_delete=models.SET_NULL, null=True, blank=True)
+    referrer = models.ForeignKey(Referrer, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
 class DatingUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='dating_profile')
-    referral_code = models.OneToOneField(ReferrerCode, on_delete=models.PROTECT)
+    candidate = models.OneToOneField(CandidateInquiry, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+    interests = models.TextField(blank=True)
+    age = models.PositiveIntegerField(null=True, blank=True)
+    gender = models.CharField(max_length=20, blank=True)
+    location = models.CharField(max_length=100, blank=True)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 
     def __str__(self):
-        return f"DatingUser: {self.user.username}"
+        return self.candidate.name

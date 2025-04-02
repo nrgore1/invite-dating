@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register as a Candidate</title>
+</head>
+<form method="post">
+    {% csrf_token %}
+    <label>Username:</label><br>
+    <input type="text" name="username" required><br>
+
+    <label>Password:</label><br>
+    <input type="password" name="password" required><br>
+
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br>
+
+    <label>Referral Code:</label><br>
+    <input type="text" name="referral_code" required><br><br>
+
+    <button type="submit">Register</button>
+</form>
+
+</html>

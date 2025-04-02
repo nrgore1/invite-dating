@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile</title>
+</head>
+<body>
+    <h1>{{ profile.user.username }}'s Profile</h1>
+
+    <p><strong>Age:</strong> {{ profile.age }}</p>
+    <p><strong>Location:</strong> {{ profile.location }}</p>
+    <p><strong>Mother Tongue:</strong> {{ profile.user.dating_profile.referral_code.referrer.name }}</p>
+    <p><strong>Interests:</strong> {{ profile.interests }}</p>
+    <p><strong>Bio:</strong> {{ profile.bio }}</p>
+
+    {% if profile.photo %}
+        <img src="{{ profile.photo.url }}" width="200">
+    {% else %}
+        <p>No photo uploaded.</p>
+    {% endif %}
+
+    <a href="{% url 'create_profile' %}">Edit Profile</a>
+</body>
+</html>
