@@ -1,6 +1,7 @@
 from django.db import models
 import string
 import random
+from django.conf import settings
 
 def generate_unique_code(length=8):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -40,7 +41,7 @@ class CandidateInquiry(models.Model):
         return self.name
 
 class DatingUser(models.Model):
-    candidate = models.OneToOneField(CandidateInquiry, on_delete=models.CASCADE)
+    candidate = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="dating_profile")
     bio = models.TextField(blank=True)
     interests = models.TextField(blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)

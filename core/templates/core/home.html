@@ -10,8 +10,9 @@
 
     <ul>
         <li><a href="{% url 'candidate_inquiry' %}">Submit Inquiry</a></li>
-        <li><a href="{% url 'register_candidate' %}">Register with Referral Code</a></li>
+        <li><a href="{% url 'register' %}">Register with Referral Code</a></li>
         <li><a href="{% url 'admin:index' %}">Admin Login</a></li>
+
     </ul>
     
     {% if user.is_authenticated %}
