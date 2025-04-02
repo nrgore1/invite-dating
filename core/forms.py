@@ -1,16 +1,22 @@
+
 from django import forms
-from .models import ReferrerCode
-from .utils import generate_unique_code
+from .models import CandidateInquiry
 
-class ReferrerCodeForm(forms.ModelForm):
+class CandidateInquiryForm(forms.ModelForm):
     class Meta:
-        model = ReferrerCode
-        fields = '__all__'
+        model = CandidateInquiry
+        fields = ['full_name', 'email', 'phone', 'gender', 'mother_tongue', 'preferences']
 
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        if not instance.referral_code:
-            instance.referral_code = generate_unique_code()
-        if commit:
-            instance.save()
-        return instance
+from .models import DatingUser
+
+class DatingProfileForm(forms.ModelForm):
+    class Meta:
+        model = DatingUser
+        fields = ['bio', 'age', 'location', 'interests', 'photo']
+        
+from .models import Referrer
+
+class ReferrerForm(forms.ModelForm):
+    class Meta:
+        model = Referrer
+        fields = ['name', 'email']

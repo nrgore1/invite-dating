@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Invite-Only Dating</title>
+</head>
+<body>
+    <h1>Welcome to Invite-Only Dating</h1>
+    <p>We help you connect with your perfect match through our VIP consultants.</p>
+
+    <ul>
+        <li><a href="{% url 'candidate_inquiry' %}">Submit Inquiry</a></li>
+        <li><a href="{% url 'register_candidate' %}">Register with Referral Code</a></li>
+        <li><a href="{% url 'admin:index' %}">Admin Login</a></li>
+    </ul>
+    
+    {% if user.is_authenticated %}
+    <li><a href="{% url 'profile_preview' %}">My Profile</a></li>
+    {% endif %}
+
+</body>
+</html>

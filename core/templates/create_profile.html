@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Your Dating Profile</title>
+</head>
+<body>
+    <h1>Create Your Dating Profile</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if user.dating_profile %}
+    <p><strong>Profile Completion:</strong> {{ user.dating_profile.profile_completion_percent }}%</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Profile</button>
+    </form>
+
+    <a href="{% url 'home' %}">← Back to Home</a>
+</body>
+</html>

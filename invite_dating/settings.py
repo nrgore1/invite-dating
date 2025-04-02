@@ -130,3 +130,39 @@ import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',  # <== THIS LINE IS MANDATORY
+        'DIRS': [BASE_DIR / 'templates'],  # Optional: use if you store templates in a global /templates folder
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey'  # ✅ This must be literally the word 'apikey'
+EMAIL_HOST_PASSWORD = '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'
+DEFAULT_FROM_EMAIL = 'ng66india@gmail.com'
+
+
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+LOGIN_URL = '/admin/login/'  # or your custom login page
+
+
+
