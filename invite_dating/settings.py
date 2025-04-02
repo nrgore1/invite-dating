@@ -164,5 +164,10 @@ logging.basicConfig(level=logging.DEBUG)
 
 LOGIN_URL = '/admin/login/'  # or your custom login page
 
+AUTH_USER_MODEL = 'core.CustomUser'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
-
+DEBUG = True
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']  # Or your real domain in production

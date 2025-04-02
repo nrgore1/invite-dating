@@ -3,7 +3,7 @@ from .models import Referrer, ReferrerCode, Consultant, CandidateInquiry, Dating
 
 @admin.register(Referrer)
 class ReferrerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email')
+    list_display = ['name']  # customize as needed
 
 @admin.register(ReferrerCode)
 class ReferrerCodeAdmin(admin.ModelAdmin):
@@ -16,7 +16,15 @@ class ConsultantAdmin(admin.ModelAdmin):
 @admin.register(CandidateInquiry)
 class CandidateInquiryAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'referral_code', 'consultant', 'referrer')
+    fields = ('name', 'email', 'referral_code', 'consultant', 'referrer')  # 👈 Add this
 
 @admin.register(DatingUser)
 class DatingUserAdmin(admin.ModelAdmin):
     list_display = ('candidate', 'age', 'gender')
+
+
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser
+
+admin.site.register(CustomUser, UserAdmin)
+
