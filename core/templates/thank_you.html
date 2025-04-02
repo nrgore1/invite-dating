@@ -1,20 +1,87 @@
 <!-- templates/core/thank_you.html -->
 <!DOCTYPE html>
 <html lang="en">
+    {% extends "base.html" %}
+
+{% block title %}Welcome - Invite Dating{% endblock %}
+
+{% block content %}
+  <div class="text-center">
+    <h1 class="display-4">Welcome to Invite-Only Dating</h1>
+    <p class="lead">Meet your match through trusted referrals.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Get Started</a>
+  </div>
+{% endblock %}
 <head>
     <meta charset="UTF-8">
     <title>Thank You</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        a {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
+
+
 <body>
-    <h1>Thank You!</h1>
-    
+<div class="container">
+    <h1>🎉 Thank You!</h1>
+
     {% if message %}
         <p>{{ message }}</p>
     {% else %}
         <p>Your submission has been received successfully.</p>
     {% endif %}
 
-    <p><a href="{% url 'home' %}">Return to Home</a></p>
+    <a href="{% url 'home' %}">Return to Home</a>
+    {% if user.is_authenticated %}
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
+{% endif %}
+</div>
 </body>
 </html>
-

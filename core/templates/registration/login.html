@@ -12,12 +12,13 @@
     <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Get Started</a>
   </div>
 {% endblock %}
-
-<head>
-    <meta charset="UTF-8">
-    <title>Register - Invite Dating</title>
-    <style>
-        body {
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Login
+  </title>
+  <style>
+   body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f6f8;
             display: flex;
@@ -74,40 +75,32 @@
             color: red;
             text-align: center;
         }
-    </style>
-</head>
+  </style>
+ </head>
+ 
 
-
-<body>
-   
-<div class="container">
-    <h2>Register</h2>
-
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <form method="post">
-        {% csrf_token %}
-        <label for="username">Username</label>
-        <input type="text" name="username" required>
-
-        <label for="email">Email</label>
-        <input type="email" name="email" required>
-
-        <label for="password">Password</label>
-        <input type="password" name="password" required>
-
-        <label for="referral_code">Referral Code</label>
-        <input type="text" name="referral_code" required>
-
-        <button type="submit">Register</button>
-    </form>
-    <p>Already registered? <a href="{% url 'login' %}">Login here</a></p>
-</div>
-</body>
+ <body>
+  <div class="container">
+   <h2>
+    Register
+   </h2>
+   {% if messages %}
+   <div class="messages">
+    {% for message in messages %}
+    <p>
+     {{ message }}
+    </p>
+    {% endfor %}
+   </div>
+   {% endif %}
+   <form action='{% url "login" %}' method="post">
+    <input name="csrfmiddlewaretoken" type="hidden" value="{% csrf_token %}"/>
+    <input name="username" placeholder="Email" required="True" type="email"/>
+    <input name="password" placeholder="Password" required="True" type="password"/>
+    <button type="submit">
+     Login
+    </button>
+   </form>
+  </div>
+ </body>
 </html>

@@ -72,3 +72,14 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+def home(request):
+    return render(request, 'core/home.html')
+
+from django.contrib.auth import login
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import ReferrerCode, CandidateInquiry, DatingUser
+from django.contrib.auth import get_user_model
+from django.contrib import messages
+
+User = get_user_model()
+
