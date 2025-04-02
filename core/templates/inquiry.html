@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% extends "base.html" %}
+
+{% block title %}Welcome - Invite Dating{% endblock %}
+
+{% block content %}
+  <div class="text-center">
+    <h1 class="display-4">Welcome to Invite-Only Dating</h1>
+    <p class="lead">Meet your match through trusted referrals.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Get Started</a>
+  </div>
+{% endblock %}
 <head>
     <meta charset="UTF-8">
     <title>Submit Your Inquiry</title>
@@ -40,7 +51,12 @@
         <textarea id="preferences" name="preferences" rows="4" cols="50" placeholder="Describe your ideal match, preferences, or any notes for the consultant..."></textarea><br><br>
 
         <button type="submit">Submit Inquiry</button>
+    
     </form>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
 
     <br>
     <a href="{% url 'home' %}">← Back to Home</a>

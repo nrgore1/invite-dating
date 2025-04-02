@@ -18,5 +18,14 @@
     <li><a href="{% url 'profile_preview' %}">My Profile</a></li>
     {% endif %}
 
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.email }} 
+    {% else %}
+    <a href="{% url 'custom_login' %}">Login</a>
+    {% endif %}
 </body>
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+  </form>
 </html>

@@ -1,8 +1,21 @@
 <!DOCTYPE html>
 <html>
+    {% extends "base.html" %}
+
+{% block title %}Welcome - Invite Dating{% endblock %}
+
+{% block content %}
+  <div class="text-center">
+    <h1 class="display-4">Welcome to Invite-Only Dating</h1>
+    <p class="lead">Meet your match through trusted referrals.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Get Started</a>
+  </div>
+{% endblock %}
 <head>
     <title>Referrer Registration</title>
 </head>
+
+
 <body>
     <h1>Register as a Referrer</h1>
     <form method="post">
@@ -10,5 +23,9 @@
         {{ form.as_p }}
         <button type="submit">Register</button>
     </form>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
 </body>
 </html>

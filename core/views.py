@@ -16,43 +16,31 @@ def register_candidate(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         email = request.POST.get("email")
-        referral_code_value = request.POST.get("referral_code")
+        referral_code = request.POST.get("referral_code")
 
-        # Check if username already exists
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists. Please choose a different one.")
             return render(request, "registration/register.html")
 
-        # Validate referral code
-        try:
-            referral = ReferrerCode.objects.get(code=referral_code_value, is_used=False)
-        except ReferrerCode.DoesNotExist:
-            messages.error(request, "Invalid or already used referral code.")
-            return render(request, "registration/register.html")
+        # ✅ Get referral instance
+        referral = get_object_or_404(ReferrerCode, code=referral_code)
 
-        # Create user
+        # ✅ Create user and login
         user = User.objects.create_user(username=username, email=email, password=password)
+        login(request, user)  # 👈 Auto-login
 
-        # Create CandidateInquiry
+        # ✅ Save inquiry and link to user
         inquiry = CandidateInquiry.objects.create(
-            name=username,
+            name=username,  # Or get from form
             email=email,
             referral_code=referral,
         )
+        DatingUser.objects.create(candidate=inquiry, user=user)
 
-        # Mark referral as used
-        referral.is_used = True
-        referral.save()
-
-        # Create DatingUser linked to CandidateInquiry
-        DatingUser.objects.create(candidate=inquiry)
-
-        # Log the user in
-        login(request, user)
-
-        return redirect("thank_you")
+        return redirect("create_profile")  # 👈 Redirect to profile creation
 
     return render(request, "registration/register.html")
+
 
 @login_required
 def create_profile(request):
@@ -102,3 +90,8 @@ def register_referrer(request):
         form = ReferrerForm()
     return render(request, 'register_referrer.html', {'form': form})
 
+def candidate_inquiry(request):
+    return render(request, 'inquiry.html')  # ✅ use the actual file name
+
+def landing_page(request):
+    return render(request, 'core/landing_page.html')

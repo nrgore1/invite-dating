@@ -5,6 +5,10 @@
 </head>
 <body>
     <h2>{{ message }}</h2>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
 </body>
 </html>
 
