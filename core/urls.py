@@ -1,3 +1,4 @@
+from . import views
 from django.urls import path
 from .views import register_referrer
 from .views import home, candidate_inquiry, thank_you, register_candidate, create_profile, profile_preview
@@ -5,7 +6,7 @@ from .views import home, candidate_inquiry, thank_you, register_candidate, creat
 urlpatterns = [
     path('', home, name='home'),
     path('inquiry/', candidate_inquiry, name='candidate_inquiry'),
-    path('thanks/', thank_you, name='thanks'),
+    path('thank-you/', views.thank_you, name='thank_you'),  # ✅ Add this
     path('register/', register_candidate, name='register_candidate'),
     path('create-profile/', create_profile, name='create_profile'),
     path('profile-preview/', profile_preview, name='profile_preview'),

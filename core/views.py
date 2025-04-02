@@ -1,55 +1,58 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.http import HttpResponseBadRequest, HttpResponseNotFound
 from django.urls import reverse
 from django.contrib import messages
-from .forms import ReferrerForm
+from .forms import ReferrerForm, CandidateInquiryForm, DatingProfileForm
+from .models import ReferrerCode, CandidateInquiry, DatingUser, Consultant
+from django.contrib.auth import get_user_model
 
-
-from .models import ReferrerCode, DatingUser, CandidateInquiry, Consultant
-from .forms import CandidateInquiryForm, DatingProfileForm
-
+User = get_user_model()
 
 def register_candidate(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        email = request.POST['email']
-        code = request.POST['referral_code']
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        email = request.POST.get("email")
+        referral_code_value = request.POST.get("referral_code")
 
+        # Check if username already exists
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists. Please choose a different one.")
+            return render(request, "registration/register.html")
+
+        # Validate referral code
         try:
-            referral = ReferrerCode.objects.get(referral_code=code)
-            if DatingUser.objects.filter(referral_code=referral).exists():
-                return HttpResponseBadRequest("Referral code already used.")
-
-            user = User.objects.create_user(username=username, password=password, email=email)
-            user.save()
-            DatingUser.objects.create(user=user, referral_code=referral)
-
-            # Auto login
-            user = authenticate(request, username=username, password=password)
-            if user:
-                login(request, user)
-
-            # Email
-            profile_link = request.build_absolute_uri(reverse('create_profile'))
-            send_mail(
-                subject="🎉 Welcome to Invite-Only Dating!",
-                message=f"Hi {username},\n\nYour registration is confirmed!\nCreate your profile: {profile_link}",
-                from_email="ng66india@gmail.com",
-                recipient_list=[email],
-                fail_silently=False,
-            )
-
-            return redirect('create_profile')
+            referral = ReferrerCode.objects.get(code=referral_code_value, is_used=False)
         except ReferrerCode.DoesNotExist:
-            return HttpResponseBadRequest("Invalid referral code.")
+            messages.error(request, "Invalid or already used referral code.")
+            return render(request, "registration/register.html")
 
-    return render(request, 'register.html')
+        # Create user
+        user = User.objects.create_user(username=username, email=email, password=password)
 
+        # Create CandidateInquiry
+        inquiry = CandidateInquiry.objects.create(
+            name=username,
+            email=email,
+            referral_code=referral,
+        )
+
+        # Mark referral as used
+        referral.is_used = True
+        referral.save()
+
+        # Create DatingUser linked to CandidateInquiry
+        DatingUser.objects.create(candidate=inquiry)
+
+        # Log the user in
+        login(request, user)
+
+        return redirect("thank_you")
+
+    return render(request, "registration/register.html")
 
 @login_required
 def create_profile(request):
@@ -69,31 +72,25 @@ def create_profile(request):
 
     return render(request, 'create_profile.html', {'form': form})
 
-
 @login_required
 def profile_preview(request):
     try:
         profile = request.user.dating_profile
     except DatingUser.DoesNotExist:
-        return HttpResponseNotFound("❌ You have not created a dating profile yet. Please <a href='/create-profile/'>create your profile</a>.")
+        return HttpResponseNotFound(
+            "❌ You have not created a dating profile yet. Please <a href='/create-profile/'>create your profile</a>."
+        )
 
     return render(request, 'profile_preview.html', {'profile': profile})
-
-from django.shortcuts import render
 
 def home(request):
     return render(request, 'core/home.html')
 
-from django.shortcuts import render
-
 def candidate_inquiry(request):
     return render(request, 'core/inquiry.html')
 
-from django.shortcuts import render
-
 def thank_you(request):
     return render(request, 'core/thank_you.html')
-
 
 def register_referrer(request):
     if request.method == 'POST':
