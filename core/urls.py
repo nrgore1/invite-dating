@@ -16,11 +16,13 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
     path('', views.landing_page, name='landing_page'),
+
 ]
 from django.contrib.auth.views import LogoutView
 
 path('logout/', LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
 
 
+   
 
 

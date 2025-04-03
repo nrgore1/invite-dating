@@ -1,8 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head><title>Page Not Found</title></head>
-<body>
-  <h1>Oops! Page not found.</h1>
-  <p>The page you were looking for doesn't exist.</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - Invite Dating{% endblock %}
+
+{% block content %}
+<div class="text-center">
+  <img src="/static/images/love-icon.png" alt="Heart Icon" width="60">
+  <h1 class="display-4 mt-3">404 - Page Not Found</h1>
+  <p class="lead">Oops! The page you're looking for doesn't exist.</p>
+  <a href="{% url 'landing_page' %}" class="btn btn-primary mt-3">Back to Home</a>
+</div>
+{% endblock %}

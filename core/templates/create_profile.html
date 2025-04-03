@@ -6,7 +6,6 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'landing_page' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'register' %}">Register</a></li>
     <li class="breadcrumb-item active" aria-current="page">Create Profile</li>
   </ol>
 </nav>
@@ -17,12 +16,8 @@
 
 {% if messages %}
   {% for message in messages %}
-    <div class="alert alert-success" role="alert">{{ message }}</div>
+    <div class="alert alert-success">{{ message }}</div>
   {% endfor %}
-{% endif %}
-
-{% if user.dating_profile %}
-  <p><strong>Profile Completion:</strong> {{ user.dating_profile.profile_completion_percent }}%</p>
 {% endif %}
 
 <form method="post" enctype="multipart/form-data">

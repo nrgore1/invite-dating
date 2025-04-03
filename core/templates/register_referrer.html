@@ -1,31 +1,29 @@
-<!DOCTYPE html>
-<html>
-    {% extends "base.html" %}
+{% extends "base.html" %}
 
-{% block title %}Welcome - Invite Dating{% endblock %}
+{% block title %}Referrer Registration{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'landing_page' %}">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Referrer Registration</li>
+  </ol>
+</nav>
+{% endblock %}
 
 {% block content %}
-  <div class="text-center">
-    <h1 class="display-4">Welcome to Invite-Only Dating</h1>
-    <p class="lead">Meet your match through trusted referrals.</p>
-    <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Get Started</a>
-  </div>
-{% endblock %}
-<head>
-    <title>Referrer Registration</title>
-</head>
-
-
-<body>
-    <h1>Register as a Referrer</h1>
+  <div class="container" style="max-width: 500px;">
+    <h2><i class="fas fa-user-friends"></i> Register as a Referrer</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Register</button>
+        <button type="submit" class="btn btn-primary">Register</button>
     </form>
-    <form method="post" action="{% url 'logout' %}">
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'logout' %}" class="mt-3">
         {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
-</body>
-</html>
+        <button type="submit" class="btn btn-secondary">Logout</button>
+    </form>
+    {% endif %}
+  </div>
+{% endblock %}
