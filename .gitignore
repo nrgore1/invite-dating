@@ -1,23 +1,20 @@
-# Django
+# Python
 *.pyc
 __pycache__/
-db.sqlite3
-*.log
-*.pot
-*.py[cod]
-*.sqlite3
 
-# Environments
+# Environment
 .env
 venv/
 Dating_venv/
-*.env
 
-# Mac
+# Django
+db.sqlite3
+/media/
+staticfiles/
+
+# OS
 .DS_Store
 
-# VS Code
+# VSCode or other IDEs
 .vscode/
-
-# Media/QR Codes if any
-media/
+.idea/
