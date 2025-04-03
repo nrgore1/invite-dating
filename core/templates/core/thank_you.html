@@ -1,14 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Thank You</title>
-</head>
-<body>
-    <h2>{{ message }}</h2>
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
-</body>
-</html>
+{% extends "base.html" %}
 
+{% block title %}Thank You - Invite Dating{% endblock %}
+
+{% block content %}
+  <div class="text-center">
+    <h1>Thank You!</h1>
+    {% if message %}
+      <p>{{ message }}</p>
+    {% else %}
+      <p>Your submission has been received successfully.</p>
+    {% endif %}
+
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button class="btn btn-secondary mt-3" type="submit">Logout</button>
+    </form>
+
+    <a href="{% url 'landing_page' %}" class="btn btn-link mt-3">← Back to Home</a>
+  </div>
+{% endblock %}

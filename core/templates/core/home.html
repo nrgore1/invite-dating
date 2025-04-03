@@ -1,32 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Welcome to Invite-Only Dating</title>
-</head>
-<body>
-    <h1>Welcome to Invite-Only Dating</h1>
-    <p>We help you connect with your perfect match through our VIP consultants.</p>
+{% extends "base.html" %}
 
-    <ul>
-        <li><a href="{% url 'candidate_inquiry' %}">Submit Inquiry</a></li>
-        <li><a href="{% url 'register' %}">Register with Referral Code</a></li>
-        <li><a href="{% url 'admin:index' %}">Admin Login</a></li>
+{% block title %}Home - Invite Dating{% endblock %}
 
-    </ul>
-    
-    {% if user.is_authenticated %}
-    <li><a href="{% url 'profile_preview' %}">My Profile</a></li>
-    {% endif %}
-
-    {% if user.is_authenticated %}
-        <p>Welcome, {{ user.email }} 
-    {% else %}
-    <a href="{% url 'custom_login' %}">Login</a>
-    {% endif %}
-</body>
-<form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-  </form>
-</html>
+{% block content %}
+  <div class="text-center">
+    <h1>Welcome Back to Invite Dating</h1>
+    <p>Your journey to meaningful connections begins here.</p>
+  </div>
+{% endblock %}

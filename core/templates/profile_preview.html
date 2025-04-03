@@ -1,40 +1,35 @@
-<!DOCTYPE html>
-<html>
-    {% extends "base.html" %}
+{% extends "base.html" %}
 
-{% block title %}Welcome - Invite Dating{% endblock %}
+{% block title %}My Profile - Invite Dating{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'landing_page' %}">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+  </ol>
+</nav>
+{% endblock %}
 
 {% block content %}
-  <div class="text-center">
-    <h1 class="display-4">Welcome to Invite-Only Dating</h1>
-    <p class="lead">Meet your match through trusted referrals.</p>
-    <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Get Started</a>
-  </div>
+<h2>{{ profile.user.username }}'s Profile</h2>
+
+<p><strong>Age:</strong> {{ profile.age }}</p>
+<p><strong>Location:</strong> {{ profile.location }}</p>
+<p><strong>Mother Tongue:</strong> {{ profile.user.dating_profile.referral_code.referrer.name }}</p>
+<p><strong>Interests:</strong> {{ profile.interests }}</p>
+<p><strong>Bio:</strong> {{ profile.bio }}</p>
+
+{% if profile.photo %}
+  <img src="{{ profile.photo.url }}" class="img-thumbnail mt-2" style="max-width: 200px;">
+{% else %}
+  <p>No photo uploaded.</p>
+{% endif %}
+
+<a href="{% url 'create_profile' %}" class="btn btn-warning mt-3">Edit Profile</a>
+
+<form action="{% url 'logout' %}" method="post" class="mt-3">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-secondary">Logout</button>
+</form>
 {% endblock %}
-<head>
-    <title>My Profile</title>
-</head>
-
-
-<body>
-    <h1>{{ profile.user.username }}'s Profile</h1>
-
-    <p><strong>Age:</strong> {{ profile.age }}</p>
-    <p><strong>Location:</strong> {{ profile.location }}</p>
-    <p><strong>Mother Tongue:</strong> {{ profile.user.dating_profile.referral_code.referrer.name }}</p>
-    <p><strong>Interests:</strong> {{ profile.interests }}</p>
-    <p><strong>Bio:</strong> {{ profile.bio }}</p>
-
-    {% if profile.photo %}
-        <img src="{{ profile.photo.url }}" width="200">
-    {% else %}
-        <p>No photo uploaded.</p>
-    {% endif %}
-
-    <a href="{% url 'create_profile' %}">Edit Profile</a>
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
-</body>
-</html>

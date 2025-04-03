@@ -1,16 +1,12 @@
-<!-- templates/500.html -->
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Server Error</title>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
-    h1 { font-size: 3rem; color: #b00020; }
-    p { font-size: 1.25rem; }
-  </style>
-</head>
-<body>
-  <h1>500 - Internal Server Error</h1>
-  <p>Something went wrong on our end. We’re working to fix it. Please try again later.</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Server Error - Invite Dating{% endblock %}
+
+{% block content %}
+<div class="text-center">
+  <img src="/static/images/love-icon.png" alt="Heart Icon" width="60">
+  <h1 class="display-4 mt-3">500 - Server Error</h1>
+  <p class="lead">Something went wrong on our end. Please try again later.</p>
+  <a href="{% url 'landing_page' %}" class="btn btn-primary mt-3">Return to Home</a>
+</div>
+{% endblock %}

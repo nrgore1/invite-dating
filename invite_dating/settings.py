@@ -174,3 +174,5 @@ AUTHENTICATION_BACKENDS = [
 
 DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']  # Or your real domain in production
+
+LOGIN_REDIRECT_URL = '/'

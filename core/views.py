@@ -93,5 +93,12 @@ def register_referrer(request):
 def candidate_inquiry(request):
     return render(request, 'inquiry.html')  # ✅ use the actual file name
 
+# def landing_page(request):
+#    return render(request, 'core/landing_page.html')
 def landing_page(request):
-    return render(request, 'core/landing_page.html')
+    return render(request, 'landing_page.html')
+
+from django.shortcuts import render
+
+def landing_page(request):
+    return render(request, 'landing_page.html')
