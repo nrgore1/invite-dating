@@ -2,63 +2,51 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.http import HttpResponseBadRequest, HttpResponseNotFound
+from django.http import HttpResponseBadRequest, HttpResponseNotFound, HttpResponse
 from django.urls import reverse
 from django.contrib import messages
+
 from .forms import ReferrerForm, CandidateInquiryForm, DatingProfileForm
 from .models import ReferrerCode, CandidateInquiry, DatingUser, Consultant
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 def register_candidate(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        email = request.POST.get("email")
-        referral_code = request.POST.get("referral_code")
-
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists. Please choose a different one.")
-            return render(request, "registration/register.html")
-
-        # ✅ Get referral instance
-        referral = get_object_or_404(ReferrerCode, code=referral_code)
-
-        # ✅ Create user and login
-        user = User.objects.create_user(username=username, email=email, password=password)
-        login(request, user)  # 👈 Auto-login
-
-        # ✅ Save inquiry and link to user
-        inquiry = CandidateInquiry.objects.create(
-            name=username,  # Or get from form
-            email=email,
-            referral_code=referral,
-        )
-        DatingUser.objects.create(candidate=inquiry, user=user)
-
-        return redirect("create_profile")  # 👈 Redirect to profile creation
-
-    return render(request, "registration/register.html")
-
-
-@login_required
-def create_profile(request):
-    try:
-        profile = request.user.dating_profile
-    except DatingUser.DoesNotExist:
-        return HttpResponseNotFound("Profile does not exist. Contact support.")
-
     if request.method == 'POST':
-        form = DatingProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile saved successfully.")
-            return redirect('profile_preview')
-    else:
-        form = DatingProfileForm(instance=profile)
+        email = request.POST.get('username')
+        password = request.POST.get('password')
+        code = request.POST.get('referral_code')
 
-    return render(request, 'create_profile.html', {'form': form})
+        if not email or not password or not code:
+            messages.error(request, "All fields are required.")
+            return redirect('register')
+
+        full_name = email.split('@')[0]
+
+        try:
+            referral = ReferrerCode.objects.get(code=code)
+
+            # FIXED FIELD NAME
+            if DatingUser.objects.filter(referrer_code=referral).exists():
+                messages.error(request, "This referral code has already been used.")
+                return redirect('register')
+
+            user = User.objects.create_user(email=email, password=password, first_name=full_name)
+            DatingUser.objects.create(candidate=user)
+
+
+            messages.success(request, "Registration successful! You can now create your profile.")
+            return redirect('create_profile')
+
+        except ReferrerCode.DoesNotExist:
+            messages.error(request, "Invalid referral code. Please check and try again.")
+            return redirect('register')
+
+    return render(request, 'core/register.html')
+
+
 
 @login_required
 def profile_preview(request):
@@ -71,14 +59,14 @@ def profile_preview(request):
 
     return render(request, 'profile_preview.html', {'profile': profile})
 
+
 def home(request):
     return render(request, 'core/home.html')
 
-def candidate_inquiry(request):
-    return render(request, 'core/inquiry.html')
 
 def thank_you(request):
     return render(request, 'core/thank_you.html')
+
 
 def register_referrer(request):
     if request.method == 'POST':
@@ -90,15 +78,14 @@ def register_referrer(request):
         form = ReferrerForm()
     return render(request, 'register_referrer.html', {'form': form})
 
+
 def candidate_inquiry(request):
-    return render(request, 'inquiry.html')  # ✅ use the actual file name
+    return render(request, 'inquiry.html')
 
-# def landing_page(request):
-#    return render(request, 'core/landing_page.html')
-def landing_page(request):
-    return render(request, 'landing_page.html')
-
-from django.shortcuts import render
 
 def landing_page(request):
     return render(request, 'landing_page.html')
+
+
+def create_profile(request):
+    return HttpResponse("Profile creation coming soon!")

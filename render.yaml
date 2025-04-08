@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: invite-dating-app
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn invite_dating.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: invite_dating.settings

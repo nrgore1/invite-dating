@@ -2,65 +2,61 @@
 {% load static %}
 <html lang="en">
 <head>
-    <style>
-        body {
-          background-color: #fdf0f5;  /* Soft pink background */
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .container {
-          background-color: #ffffff;
-          border-radius: 10px;
-          padding: 2rem;
-          box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
-        .breadcrumb {
-          background-color: transparent;
-        }
-        .navbar {
-          background-color: #8e44ad !important;
-        }
-        .navbar a {
-          color: #fff !important;
-        }
-        .btn-primary {
-          background-color: #e91e63;
-          border-color: #e91e63;
-        }
-        .btn-primary:hover {
-          background-color: #d81b60;
-        }
-      </style>
-      
+  <style>
+    body {
+      background-color: #fdf0f5;  /* Soft pink background */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .breadcrumb {
+      background-color: transparent;
+    }
+    .navbar {
+      background-color: #8e44ad !important;
+    }
+    .navbar a {
+      color: #fff !important;
+    }
+    .btn-primary {
+      background-color: #e91e63;
+      border-color: #e91e63;
+    }
+    .btn-primary:hover {
+      background-color: #d81b60;
+    }
+  </style>
+
   <meta charset="UTF-8">
   <title>{% block title %}Invite Dating{% endblock %}</title>
   <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
 </head>
 <body>
-
-    
 
   <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'landing_page' %}">
-            <img src="/static/images/logo.png" height="30" alt="Logo"> Invite Dating
-          </a>
+      <a class="navbar-brand" href="{% url 'landing_page' %}">
+        <img src="{% static 'images/logo.png' %}" height="30" alt="Logo"> Invite Dating
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Register</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
-              </li>              
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -69,8 +65,17 @@
   <!-- Page Content -->
   <div class="container mt-4">
     {% block breadcrumbs %}
-      <!-- Breadcrumb placeholder -->
     {% endblock %}
+
+    <!-- Global Message Alerts -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show text-center" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
 
     {% block content %}
     {% endblock %}

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ReferralRequest, ReferralCode
+from .models import ReferralRequest, ReferrerCode
 
 class ReferralRequestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -7,8 +7,8 @@ class ReferralRequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['referrer', 'approved', 'created_at']
 
-class ReferralCodeSerializer(serializers.ModelSerializer):
+class ReferrerCodeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ReferralCode
+        model = ReferrerCode
         fields = '__all__'
 
