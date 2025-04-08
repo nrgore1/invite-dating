@@ -9,9 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-%^u)x#a)_1no7=-sah%ny_2l5n5%l5p0vy74%6(97tvp%2-jf3"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'invite-dating.onrender.com']
 
 # Application definition
 INSTALLED_APPS = [
