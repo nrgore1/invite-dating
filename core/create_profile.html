@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Create Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Create Your Dating Profile</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label class="form-label">Photo</label>
+      {{ form.photo|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Bio</label>
+      {{ form.bio|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Interests</label>
+      {{ form.interests|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Age</label>
+      {{ form.age|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Gender</label>
+      {{ form.gender|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Location</label>
+      {{ form.location|add_class:"form-control" }}
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Profile</button>
+  </form>
+
+  <a href="{% url 'home' %}" class="btn btn-link mt-3">← Back to Home</a>
+</div>
+{% endblock %}

@@ -12,22 +12,26 @@ class CandidateInquiryForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'placeholder': 'Phone (optional)'}),
         }
 
-# ✅ Form for dating profile
 class DatingProfileForm(forms.ModelForm):
     class Meta:
         model = DatingUser
-        fields = ['bio', 'age', 'location', 'interests', 'photo']
+        fields = ['photo', 'bio', 'interests', 'age', 'gender', 'location']
         widgets = {
-            'bio': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Tell us about yourself'}),
-            'interests': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Hobbies, passions...'}),
+            'bio': forms.Textarea(attrs={'rows': 3}),
+            'interests': forms.Textarea(attrs={'rows': 2}),
+            'age': forms.NumberInput(attrs={'min': 18}),
+            'gender': forms.TextInput(attrs={'placeholder': 'e.g., Male/Female/Other'}),
+            'location': forms.TextInput(attrs={'placeholder': 'City, State'}),
         }
+
 
 # ✅ Form for referrer registration
 class ReferrerForm(forms.ModelForm):
     class Meta:
         model = Referrer
-        fields = ['name', 'email']
+        fields = ['first_name', 'last_name', 'email']
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Referrer Name'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Referrer Email'}),
         }

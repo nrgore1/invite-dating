@@ -49,19 +49,22 @@ class CustomUser(AbstractUser):
 
 
 class Consultant(models.Model):
-    name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.first_name} {self.last_name}"
+
 
 
 class Referrer(models.Model):
-    name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.first_name} {self.last_name}"
 
 
 class ReferrerCode(models.Model):
@@ -89,6 +92,8 @@ class CandidateInquiry(models.Model):
 
 class DatingUser(models.Model):
     candidate = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="dating_profile")
+    first_name = models.CharField(max_length=100)  # 👈 Added
+    last_name = models.CharField(max_length=100)   # 👈 Added
     bio = models.TextField(blank=True)
     interests = models.TextField(blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
@@ -96,8 +101,15 @@ class DatingUser(models.Model):
     location = models.CharField(max_length=100, blank=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
-    referrer_code = models.ForeignKey(ReferrerCode, on_delete=models.SET_NULL, null=True, blank=True)  # ✅ Add this line
+    referrer_code = models.ForeignKey(ReferrerCode, on_delete=models.SET_NULL, null=True, blank=True)
+    is_approved = models.BooleanField(default=False)  # 🔥 Needed for admin approval flow
 
     def __str__(self):
-        return self.candidate.email
+        return f"{self.first_name} {self.last_name} ({self.candidate.email})"
+
+
+
+
+
+
 
