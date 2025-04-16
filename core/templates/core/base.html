@@ -31,6 +31,17 @@
       background-color: #d81b60;
     }
   </style>
+  <style>
+    body {
+      animation: fadeIn 0.5s ease-in;
+    }
+  
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  
 
   <meta charset="UTF-8">
   <title>{% block title %}Invite Dating{% endblock %}</title>

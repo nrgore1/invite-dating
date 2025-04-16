@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Profile Step 2: About You {% endblock %}
+
+{% block content %}
+
+<style>
+  body {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .breadcrumb .active {
+    font-weight: bold;
+  }
+
+  @media (max-width: 576px) {
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    .breadcrumb {
+      font-size: 0.9rem;
+    }
+
+    .btn {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<div class="container mt-5 px-3 px-md-5" style="max-width: 600px;">
+  <!-- Breadcrumb with Step Status -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active text-success" aria-current="page">✅ Step 2: About You</li>
+      <li class="breadcrumb-item text-muted">Step 2: About You</li>
+      <li class="breadcrumb-item text-muted">Step 3: Photo</li>
+    </ol>
+  </nav>
+
+  <!-- Progress Bar -->
+  <div class="progress mb-4" style="height: 20px;">
+    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
+      Step 2 of 3
+    </div>
+  </div>
+
+  <h2 class="mb-4">Step 2: About You</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary w-100">Next →</button>
+  </form>
+</div>
+
+{% endblock %}
