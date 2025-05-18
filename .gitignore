@@ -1,25 +1,88 @@
-# Django
-*.pyc
+# Python
 __pycache__/
-db.sqlite3
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.p~  # backup files
+
+# Django related
 *.log
 *.pot
-*.py[cod]
-*.sqlite3
-
-# Environments
+*.pyc
+local_settings.py
+db.sqlite3
+instance/
 .env
-venv/
-Dating_venv/
-*.env
+.env.*
 
-# Mac
+# Django static/media
+/staticfiles/
+/media/
+/static/
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Mac OS
 .DS_Store
 
-# VS Code
+# Virtual environments
+venv/
+env/
+ENV/
+NewDating_venv/
+
+# Coverage
+htmlcov/
+.coverage
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Build artifacts
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# mypy
+.mypy_cache/
+
+# pytest
+.pytest_cache/
+
+# Pipenv
+Pipfile.lock
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Node
+node_modules/
+npm-debug.log*
+
+# VS Code settings
 .vscode/
 
-# Media/QR Codes if any
-media/
-NewDating_venv/
-NewDating_venv/
+# Heroku
+*.sqlite3
+
+# Backup files
+*~
