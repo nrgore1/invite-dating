@@ -127,7 +127,7 @@ def create_superuser_view(request):
         User.objects.create_superuser(
             username='admin',
             email='nrgore1@gmail.com',
-            password='Naren?66'
+            password='Naren?66',
         )
         return HttpResponse("Superuser created.")
     return HttpResponse("Superuser already exists.")
