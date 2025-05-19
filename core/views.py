@@ -10,6 +10,8 @@ from .models import ReferrerCode, CandidateInquiry, DatingUser, Consultant
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponse
+
 
 User = get_user_model()
 
@@ -100,7 +102,6 @@ def candidate_inquiry(request):
 def landing_page(request):
     return render(request, 'landing_page.html')
 
-from django.shortcuts import render
 
 def landing_page(request):
     return render(request, 'landing_page.html')
