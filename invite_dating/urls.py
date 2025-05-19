@@ -3,7 +3,7 @@ from django.urls import path, include
 from core.views import register_candidate  # 👈 Add this
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import run_setup_commands
+from core.views import run_setup_commands
 
 urlpatterns = [
     path('admin/', admin.site.urls),
