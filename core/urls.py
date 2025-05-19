@@ -22,7 +22,11 @@ from django.contrib.auth.views import LogoutView
 
 path('logout/', LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
 
+from .views import create_superuser_view
 
+urlpatterns += [
+    path('create-superuser/', create_superuser_view, name='create_superuser'),
+]
    
 
 

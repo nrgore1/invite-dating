@@ -19,7 +19,10 @@ instance/
 # Django static/media
 /staticfiles/
 /media/
-/static/
+/# Ignore all static files except images
+static/*
+!static/images/
+!static/images/**
 
 # IDEs
 .vscode/

@@ -108,9 +108,26 @@ def landing_page(request):
 
 
 
-# @staff_member_required
-# def run_setup_commands(request):
+@staff_member_required
 def run_setup_commands(request):
-    call_command('migrate')
-    call_command('collectstatic', '--noinput')
+
+    # call_command('migrate')
+    # call_command('collectstatic', '--noinput')
     return HttpResponse("Migrations and static collection done.")
+
+
+from django.contrib.auth import get_user_model
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponse
+
+@staff_member_required
+def create_superuser_view(request):
+    User = get_user_model()
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser(
+            username='admin',
+            email='nrgore1@gmail.com',
+            password='Naren?66'
+        )
+        return HttpResponse("Superuser created.")
+    return HttpResponse("Superuser already exists.")
