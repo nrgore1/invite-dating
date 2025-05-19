@@ -8,7 +8,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-for-dev")
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(',')
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+render_host = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+if render_host:
+    ALLOWED_HOSTS.append(render_host)
+
 
 # APPLICATIONS
 INSTALLED_APPS = [
@@ -109,3 +113,5 @@ LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
