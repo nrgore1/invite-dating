@@ -8,6 +8,8 @@ from django.contrib import messages
 from .forms import ReferrerForm, CandidateInquiryForm, DatingProfileForm
 from .models import ReferrerCode, CandidateInquiry, DatingUser, Consultant
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
+from django.contrib.admin.views.decorators import staff_member_required
 
 User = get_user_model()
 
@@ -102,3 +104,11 @@ from django.shortcuts import render
 
 def landing_page(request):
     return render(request, 'landing_page.html')
+
+
+
+@staff_member_required
+def run_setup_commands(request):
+    call_command('migrate')
+    call_command('collectstatic', '--noinput')
+    return HttpResponse("Migrations and static collection done.")
