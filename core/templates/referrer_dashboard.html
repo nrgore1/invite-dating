@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Referrer Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1>Welcome, Referrer!</h1>
+  <p class="lead">Here you can track your referred candidates and generate new referral codes.</p>
+
+  <ul>
+    <li><a href="{% url 'register_referrer' %}">Refer a New Candidate</a></li>
+    <li><a href="/admin/">Go to Admin Panel</a></li>
+  </ul>
+</div>
+{% endblock %}

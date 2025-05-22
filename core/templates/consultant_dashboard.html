@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Consultant Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1>Welcome, Consultant!</h1>
+  <p class="lead">Here you can manage candidate inquiries and assist with profile reviews.</p>
+
+  <ul>
+    <li><a href="/admin/core/candidateinquiry/">View Candidate Inquiries</a></li>
+    <li><a href="/admin/core/datinguser/">Review Dating Profiles</a></li>
+  </ul>
+</div>
+{% endblock %}
