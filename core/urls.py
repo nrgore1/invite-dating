@@ -1,12 +1,12 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from core.views import (
     landing_page, home, register_candidate, register_referrer,
     create_profile, profile_preview, candidate_inquiry, thank_you,
-    CustomLoginView, referrer_dashboard, consultant_dashboard
+    CustomLoginView, referrer_dashboard, consultant_dashboard, matches
 )
 
 urlpatterns = [
@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('referrer-dashboard/', referrer_dashboard, name='referrer_dashboard'),
     path('consultant-dashboard/', consultant_dashboard, name='consultant_dashboard'),
+    path('matches/', matches, name='matches'),
 ]
 
 if settings.DEBUG:

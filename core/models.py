@@ -1,7 +1,8 @@
 from django.db import models
+from django.conf import settings
 import string
 import random
-from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 
 def generate_unique_code(length=8):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -50,37 +51,14 @@ class DatingUser(models.Model):
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
 
-
     def __str__(self):
-        return self.candidate.name
-# Example for a ForeignKey
-referral_code = models.ForeignKey(ReferrerCode, on_delete=models.PROTECT, null=True, blank=True)
-
-# For CharFields
-name = models.CharField(max_length=255, null=True, blank=True)
-
-# For ImageFields
-profile_image = models.ImageField(upload_to='...', null=True, blank=True)
-
-from django.contrib.auth.models import AbstractUser
-from django.db import models
+        return f"{self.candidate.get_full_name() or self.candidate.email}"
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []  # or other fields you want to collect like ['first_name']
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.email
-def home(request):
-    return render(request, 'core/home.html')
-
-from django.contrib.auth import login
-from django.shortcuts import get_object_or_404, redirect, render
-from .models import ReferrerCode, CandidateInquiry, DatingUser
-from django.contrib.auth import get_user_model
-from django.contrib import messages
-
-User = get_user_model()
-

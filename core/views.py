@@ -1,16 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.core.management import call_command
-from django.contrib import messages
 from django.http import HttpResponse, HttpResponseNotFound
-from django.contrib.auth import get_user_model
-from django.contrib.auth.views import LoginView
-from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import reverse
-
-from .forms import ReferrerForm, DatingProfileForm
-from .models import ReferrerCode, CandidateInquiry, DatingUser
+from django.contrib import messages
+from .forms import ReferrerForm, CandidateInquiryForm, DatingProfileForm
+from .models import ReferrerCode, CandidateInquiry, DatingUser, Consultant
+from django.contrib.auth import get_user_model
+from django.core.management import call_command
+from django.contrib.auth.views import LoginView
 
 User = get_user_model()
 
@@ -48,7 +46,7 @@ def register_candidate(request):
         referral_code = request.POST.get("referral_code")
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists.")
+            messages.error(request, "Username already exists. Please choose a different one.")
             return render(request, "registration/register.html")
 
         referral = get_object_or_404(ReferrerCode, code=referral_code)
@@ -91,8 +89,16 @@ def profile_preview(request):
     try:
         profile = request.user.dating_profile
     except DatingUser.DoesNotExist:
-        return HttpResponseNotFound("❌ No profile found. <a href='/create-profile/'>Create one here</a>.")
+        return HttpResponseNotFound(
+            "❌ You have not created a dating profile yet. Please <a href='/create-profile/'>create your profile</a>."
+        )
+
     return render(request, 'profile_preview.html', {'profile': profile})
+
+
+@login_required
+def matches(request):
+    return render(request, 'matches.html')
 
 
 def thank_you(request):
@@ -114,31 +120,27 @@ def candidate_inquiry(request):
     return render(request, 'inquiry.html')
 
 
-from django.urls import reverse
-from django.contrib.auth.views import LoginView
-
 class CustomLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
 
-        # If the user has a dating profile, go to matches
-        if hasattr(user, 'dating_profile'):
-            return reverse('profile_preview')
+        try:
+            if hasattr(user, 'dating_profile'):
+                return reverse('matches')
 
-        # If user belongs to Referrers group
-        if user.groups.filter(name='Referrers').exists():
-            return reverse('referrer_dashboard')
+            if user.groups.filter(name='Referrers').exists():
+                return reverse('referrer_dashboard')
 
-        # If user belongs to Consultants group
-        if user.groups.filter(name='Consultants').exists():
-            return reverse('consultant_dashboard')
+            if user.groups.filter(name='Consultants').exists():
+                return reverse('consultant_dashboard')
 
-        # If the user has not completed a profile
-        if hasattr(user, 'datinguser'):
-            return reverse('create_profile')
+            if hasattr(user, 'datinguser'):
+                return reverse('create_profile')
 
-        # Fallback (use admin for now to easily check)
-        return reverse('admin:index')
+        except Exception as e:
+            print("Login redirection error:", e)
+
+        return reverse('landing_page')
 
 
 @login_required
