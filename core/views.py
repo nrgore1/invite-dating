@@ -9,6 +9,7 @@ from .forms import ReferrerForm, CandidateInquiryForm, DatingProfileForm
 from .models import ReferrerCode, CandidateInquiry, DatingUser, Consultant
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
+from django.contrib.admin.views.decorators import staff_member_required
 
 User = get_user_model()
 
@@ -58,7 +59,7 @@ def register_candidate(request):
             email=email,
             referral_code=referral,
         )
-        DatingUser.objects.create(candidate=user, user=user)
+        DatingUser.objects.create(candidate=user, user=user)  # candidate=user if CustomUser is correct
 
         return redirect("create_profile")
 
@@ -113,3 +114,36 @@ def register_referrer(request):
 
 def candidate_inquiry(request):
     return render(request, 'inquiry.html')
+
+
+# Custom login redirection logic after authentication
+from django.contrib.auth.views import LoginView
+
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        user = self.request.user
+
+        try:
+            # Priority: Consultant > Referrer > DatingUser w/profile > DatingUser w/o profile
+            if user.groups.filter(name='Consultants').exists():
+                return reverse('consultant_dashboard')
+            elif user.groups.filter(name='Referrers').exists():
+                return reverse('referrer_dashboard')
+            elif hasattr(user, 'dating_profile'):
+                return reverse('matches')
+            elif hasattr(user, 'datinguser'):
+                return reverse('create_profile')
+        except Exception as e:
+            print("Login redirection error:", e)
+
+        return reverse('landing_page')
+
+
+@login_required
+def referrer_dashboard(request):
+    return render(request, "referrer_dashboard.html")
+
+
+@staff_member_required
+def consultant_dashboard(request):
+    return render(request, "consultant_dashboard.html")

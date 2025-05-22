@@ -13,7 +13,9 @@ urlpatterns = [
     path('profile-preview/', views.profile_preview, name='profile_preview'),
     path('inquiry/', views.candidate_inquiry, name='candidate_inquiry'),
     path('thank-you/', views.thank_you, name='thank_you'),
-    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('admin/', admin.site.urls),
+    path('', include('core.urls')),
+    path('login/', CustomLoginView.as_view(), name='login'),  # ✅ ensure this is used
     path('logout/', LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
     path('', views.landing_page, name='landing_page'),
 
@@ -22,11 +24,17 @@ from django.contrib.auth.views import LogoutView
 
 path('logout/', LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
 
-from .views import create_superuser_view
+# from .views import create_superuser_view
 
-urlpatterns += [
-    path('create-superuser/', create_superuser_view, name='create_superuser'),
-]
+# urlpatterns += [
+#   path('create-superuser/', create_superuser_view, name='create_superuser'),
+# ]
    
 
+from .views import referrer_dashboard, consultant_dashboard
 
+urlpatterns += [
+    path('referrer-dashboard/', referrer_dashboard, name='referrer_dashboard'),
+    path('consultant-dashboard/', consultant_dashboard, name='consultant_dashboard'),
+]
+from core.views import CustomLoginView
