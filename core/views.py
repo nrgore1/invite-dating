@@ -58,7 +58,7 @@ def register_candidate(request):
             email=email,
             referral_code=referral,
         )
-        DatingUser.objects.create(candidate=inquiry, user=user)
+        DatingUser.objects.create(candidate=user, user=user)
 
         return redirect("create_profile")
 
