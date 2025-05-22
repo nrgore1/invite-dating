@@ -14,15 +14,15 @@ from django.contrib.admin.views.decorators import staff_member_required
 User = get_user_model()
 
 
-def create_superuser_view(request):
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser(
-            username='admin',
-            email='nrgore1@gmail.com',
-            password='Naren?66',
-        )
-        return HttpResponse("✅ Superuser created.")
-    return HttpResponse("⚠️ Superuser already exists.")
+# def create_superuser_view(request):
+#    if not User.objects.filter(username='admin').exists():
+#        User.objects.create_superuser(
+#            username='admin',
+#            email='nrgore1@gmail.com',
+#            password='Naren?66',
+#        )
+#        return HttpResponse("✅ Superuser created.")
+#    return HttpResponse("⚠️ Superuser already exists.")
 
 
 def run_setup_commands(request):
@@ -123,20 +123,20 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
 
-        try:
-            # Priority: Consultant > Referrer > DatingUser w/profile > DatingUser w/o profile
-            if user.groups.filter(name='Consultants').exists():
-                return reverse('consultant_dashboard')
-            elif user.groups.filter(name='Referrers').exists():
-                return reverse('referrer_dashboard')
-            elif hasattr(user, 'dating_profile'):
-                return reverse('matches')
-            elif hasattr(user, 'datinguser'):
-                return reverse('create_profile')
-        except Exception as e:
-            print("Login redirection error:", e)
+        if hasattr(user, 'dating_profile'):
+            return reverse('matches')
+
+        if user.groups.filter(name='Referrers').exists():
+            return reverse('referrer_dashboard')
+
+        if user.groups.filter(name='Consultants').exists():
+            return reverse('consultant_dashboard')
+
+        if hasattr(user, 'datinguser'):
+            return reverse('create_profile')
 
         return reverse('landing_page')
+
 
 
 @login_required
