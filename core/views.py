@@ -151,3 +151,27 @@ def referrer_dashboard(request):
 @login_required
 def consultant_dashboard(request):
     return render(request, "consultant_dashboard.html")
+
+from .forms import SearchForm
+
+@login_required
+def match_list(request):
+    form = SearchForm(request.GET or None)
+    matches = DatingUser.objects.exclude(candidate=request.user)
+
+    if form.is_valid():
+        age_min = form.cleaned_data.get('age_min')
+        age_max = form.cleaned_data.get('age_max')
+        gender = form.cleaned_data.get('gender')
+        location = form.cleaned_data.get('location')
+
+        if age_min:
+            matches = matches.filter(age__gte=age_min)
+        if age_max:
+            matches = matches.filter(age__lte=age_max)
+        if gender:
+            matches = matches.filter(gender=gender)
+        if location:
+            matches = matches.filter(location__icontains=location)
+
+    return render(request, 'match_list.html', {'form': form, 'matches': matches})

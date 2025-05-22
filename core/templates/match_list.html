@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Matches{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h2>Search Matches</h2>
+    <form method="get" class="row g-3 mb-4">
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <h3>Matching Profiles</h3>
+    {% if matches %}
+      <ul class="list-group">
+        {% for match in matches %}
+          <li class="list-group-item">
+            <strong>{{ match.candidate.email }}</strong><br>
+            Age: {{ match.age }} | Gender: {{ match.gender }} | Location: {{ match.location }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No matches found.</p>
+    {% endif %}
+  </div>
+{% endblock %}

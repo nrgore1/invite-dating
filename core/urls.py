@@ -28,3 +28,9 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+from core.views import match_list
+
+urlpatterns += [
+    path('matches/', match_list, name='matches'),
+]
