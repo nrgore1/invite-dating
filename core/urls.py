@@ -1,40 +1,30 @@
-from . import views
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
-from django.urls import path
-from .views import register_referrer
-from .views import home, candidate_inquiry, thank_you, register_candidate, create_profile, profile_preview
-from django.contrib.auth.views import LoginView
+from core.views import (
+    landing_page, home, register_candidate, register_referrer, create_profile,
+    profile_preview, candidate_inquiry, thank_you, run_setup_commands,
+    CustomLoginView, referrer_dashboard, consultant_dashboard
+)
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('register/', views.register_candidate, name='register'),
-    path('register-referrer/', views.register_referrer, name='register_referrer'),
-    path('create-profile/', views.create_profile, name='create_profile'),
-    path('profile-preview/', views.profile_preview, name='profile_preview'),
-    path('inquiry/', views.candidate_inquiry, name='candidate_inquiry'),
-    path('thank-you/', views.thank_you, name='thank_you'),
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),
-    path('login/', CustomLoginView.as_view(), name='login'),  # ✅ ensure this is used
-    path('logout/', LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
-    path('', views.landing_page, name='landing_page'),
-
-]
-from django.contrib.auth.views import LogoutView
-
-path('logout/', LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
-
-# from .views import create_superuser_view
-
-# urlpatterns += [
-#   path('create-superuser/', create_superuser_view, name='create_superuser'),
-# ]
-   
-
-from .views import referrer_dashboard, consultant_dashboard
-
-urlpatterns += [
+    path('', landing_page, name='landing_page'),
+    path('home/', home, name='home'),
+    path('register/', register_candidate, name='register'),
+    path('register-referrer/', register_referrer, name='register_referrer'),
+    path('create-profile/', create_profile, name='create_profile'),
+    path('profile-preview/', profile_preview, name='profile_preview'),
+    path('inquiry/', candidate_inquiry, name='candidate_inquiry'),
+    path('thank-you/', thank_you, name='thank_you'),
+    path('run-setup/', run_setup_commands),  # optional: remove after setup
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     path('referrer-dashboard/', referrer_dashboard, name='referrer_dashboard'),
     path('consultant-dashboard/', consultant_dashboard, name='consultant_dashboard'),
 ]
-from core.views import CustomLoginView
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

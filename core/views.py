@@ -10,34 +10,20 @@ from .models import ReferrerCode, CandidateInquiry, DatingUser, Consultant
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.views import LoginView
 
 User = get_user_model()
-
-
-# def create_superuser_view(request):
-#    if not User.objects.filter(username='admin').exists():
-#        User.objects.create_superuser(
-#            username='admin',
-#            email='nrgore1@gmail.com',
-#            password='Naren?66',
-#        )
-#        return HttpResponse("✅ Superuser created.")
-#    return HttpResponse("⚠️ Superuser already exists.")
-
 
 def run_setup_commands(request):
     call_command('migrate')
     call_command('collectstatic', '--noinput')
     return HttpResponse("✅ Migrations and static collection complete.")
 
-
 def landing_page(request):
     return render(request, 'landing_page.html')
 
-
 def home(request):
     return render(request, 'core/home.html')
-
 
 def register_candidate(request):
     if request.method == "POST":
@@ -59,12 +45,11 @@ def register_candidate(request):
             email=email,
             referral_code=referral,
         )
-        DatingUser.objects.create(candidate=user, user=user)  # candidate=user if CustomUser is correct
+        DatingUser.objects.create(user=user, referral_code=referral)
 
         return redirect("create_profile")
 
     return render(request, "registration/register.html")
-
 
 @login_required
 def create_profile(request):
@@ -84,7 +69,6 @@ def create_profile(request):
 
     return render(request, 'create_profile.html', {'form': form})
 
-
 @login_required
 def profile_preview(request):
     try:
@@ -96,10 +80,8 @@ def profile_preview(request):
 
     return render(request, 'profile_preview.html', {'profile': profile})
 
-
 def thank_you(request):
     return render(request, 'core/thank_you.html')
-
 
 def register_referrer(request):
     if request.method == 'POST':
@@ -111,38 +93,25 @@ def register_referrer(request):
         form = ReferrerForm()
     return render(request, 'register_referrer.html', {'form': form})
 
-
 def candidate_inquiry(request):
     return render(request, 'inquiry.html')
-
-
-# Custom login redirection logic after authentication
-from django.contrib.auth.views import LoginView
 
 class CustomLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
-
         if hasattr(user, 'dating_profile'):
-            return reverse('matches')
-
+            return reverse('profile_preview')
         if user.groups.filter(name='Referrers').exists():
             return reverse('referrer_dashboard')
-
         if user.groups.filter(name='Consultants').exists():
             return reverse('consultant_dashboard')
-
         if hasattr(user, 'datinguser'):
             return reverse('create_profile')
-
-        return reverse('landing_page')
-
-
+        return reverse('home')
 
 @login_required
 def referrer_dashboard(request):
     return render(request, "referrer_dashboard.html")
-
 
 @staff_member_required
 def consultant_dashboard(request):
