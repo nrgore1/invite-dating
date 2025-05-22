@@ -114,19 +114,31 @@ def candidate_inquiry(request):
     return render(request, 'inquiry.html')
 
 
+from django.urls import reverse
+from django.contrib.auth.views import LoginView
+
 class CustomLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
 
+        # If the user has a dating profile, go to matches
         if hasattr(user, 'dating_profile'):
-            return reverse('matches')
-        elif user.groups.filter(name='Referrers').exists():
+            return reverse('profile_preview')
+
+        # If user belongs to Referrers group
+        if user.groups.filter(name='Referrers').exists():
             return reverse('referrer_dashboard')
-        elif user.groups.filter(name='Consultants').exists():
+
+        # If user belongs to Consultants group
+        if user.groups.filter(name='Consultants').exists():
             return reverse('consultant_dashboard')
-        elif hasattr(user, 'datinguser'):
+
+        # If the user has not completed a profile
+        if hasattr(user, 'datinguser'):
             return reverse('create_profile')
-        return reverse('landing_page')
+
+        # Fallback (use admin for now to easily check)
+        return reverse('admin:index')
 
 
 @login_required
