@@ -20,3 +20,13 @@ class ReferrerForm(forms.ModelForm):
     class Meta:
         model = Referrer
         fields = ['name', 'email']
+from django import forms
+
+class SearchForm(forms.Form):
+    age_min = forms.IntegerField(required=False, label="Min Age")
+    age_max = forms.IntegerField(required=False, label="Max Age")
+    gender = forms.ChoiceField(
+        choices=[('', 'Any'), ('Male', 'Male'), ('Female', 'Female')],
+        required=False
+    )
+    location = forms.CharField(max_length=100, required=False)

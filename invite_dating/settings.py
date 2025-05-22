@@ -112,7 +112,9 @@ DEFAULT_FROM_EMAIL = os.getenv("FROM_EMAIL", "nrgore1@gmail.com")
 
 # LOGIN
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/create-profile/'
+LOGIN_REDIRECT_URL = '/matches/'
+
+
 
 # DEFAULT PRIMARY KEY FIELD TYPE
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

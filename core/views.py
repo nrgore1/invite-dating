@@ -8,35 +8,16 @@ from .forms import ReferrerForm, CandidateInquiryForm, DatingProfileForm
 from .models import ReferrerCode, CandidateInquiry, DatingUser, Consultant
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.views import LoginView
 
 User = get_user_model()
 
-
-def create_superuser_view(request):
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser(
-            username='admin',
-            email='nrgore1@gmail.com',
-            password='Naren?66',
-        )
-        return HttpResponse("✅ Superuser created.")
-    return HttpResponse("⚠️ Superuser already exists.")
-
-
-def run_setup_commands(request):
-    call_command('migrate')
-    call_command('collectstatic', '--noinput')
-    return HttpResponse("✅ Migrations and static collection complete.")
-
-
 def landing_page(request):
     return render(request, 'landing_page.html')
 
-
 def home(request):
     return render(request, 'core/home.html')
-
 
 def register_candidate(request):
     if request.method == "POST":
@@ -46,24 +27,19 @@ def register_candidate(request):
         referral_code = request.POST.get("referral_code")
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists. Please choose a different one.")
+            messages.error(request, "Username already exists.")
             return render(request, "registration/register.html")
 
         referral = get_object_or_404(ReferrerCode, code=referral_code)
         user = User.objects.create_user(username=username, email=email, password=password)
         login(request, user)
 
-        inquiry = CandidateInquiry.objects.create(
-            name=username,
-            email=email,
-            referral_code=referral,
-        )
-        DatingUser.objects.create(candidate=user, user=user)
+        inquiry = CandidateInquiry.objects.create(name=username, email=email, referral_code=referral)
+        DatingUser.objects.create(candidate=user)
 
         return redirect("create_profile")
 
     return render(request, "registration/register.html")
-
 
 @login_required
 def create_profile(request):
@@ -72,106 +48,60 @@ def create_profile(request):
     except DatingUser.DoesNotExist:
         return HttpResponseNotFound("Profile does not exist. Contact support.")
 
-    if request.method == 'POST':
-        form = DatingProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile saved successfully.")
-            return redirect('profile_preview')
-    else:
-        form = DatingProfileForm(instance=profile)
+    form = DatingProfileForm(request.POST or None, request.FILES or None, instance=profile)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, "Profile saved.")
+        return redirect('profile_preview')
 
     return render(request, 'create_profile.html', {'form': form})
-
 
 @login_required
 def profile_preview(request):
     try:
         profile = request.user.dating_profile
     except DatingUser.DoesNotExist:
-        return HttpResponseNotFound(
-            "❌ You have not created a dating profile yet. Please <a href='/create-profile/'>create your profile</a>."
-        )
+        return HttpResponseNotFound("Profile not found. Please <a href='/create-profile/'>create one</a>.")
 
     return render(request, 'profile_preview.html', {'profile': profile})
-
-
-@login_required
-def matches(request):
-    return render(request, 'matches.html')
-
 
 def thank_you(request):
     return render(request, 'core/thank_you.html')
 
-
 def register_referrer(request):
-    if request.method == 'POST':
-        form = ReferrerForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'thank_you.html', {'message': 'Thank you for registering as a referrer!'})
-    else:
-        form = ReferrerForm()
+    form = ReferrerForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return render(request, 'thank_you.html', {'message': 'Thank you for registering!'})
     return render(request, 'register_referrer.html', {'form': form})
-
 
 def candidate_inquiry(request):
     return render(request, 'inquiry.html')
-
 
 class CustomLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
 
-        try:
-            if hasattr(user, 'dating_profile'):
-                return reverse('matches')
-
-            if user.groups.filter(name='Referrers').exists():
-                return reverse('referrer_dashboard')
-
-            if user.groups.filter(name='Consultants').exists():
-                return reverse('consultant_dashboard')
-
-            if hasattr(user, 'datinguser'):
-                return reverse('create_profile')
-
-        except Exception as e:
-            print("Login redirection error:", e)
+        if hasattr(user, 'dating_profile'):
+            return reverse('matches')
+        if user.groups.filter(name='Referrers').exists():
+            return reverse('referrer_dashboard')
+        if user.groups.filter(name='Consultants').exists():
+            return reverse('consultant_dashboard')
+        if hasattr(user, 'datinguser'):
+            return reverse('create_profile')
 
         return reverse('landing_page')
-
 
 @login_required
 def referrer_dashboard(request):
     return render(request, "referrer_dashboard.html")
 
-
-@login_required
+@staff_member_required
 def consultant_dashboard(request):
     return render(request, "consultant_dashboard.html")
 
-from .forms import SearchForm
-
 @login_required
-def match_list(request):
-    form = SearchForm(request.GET or None)
-    matches = DatingUser.objects.exclude(candidate=request.user)
-
-    if form.is_valid():
-        age_min = form.cleaned_data.get('age_min')
-        age_max = form.cleaned_data.get('age_max')
-        gender = form.cleaned_data.get('gender')
-        location = form.cleaned_data.get('location')
-
-        if age_min:
-            matches = matches.filter(age__gte=age_min)
-        if age_max:
-            matches = matches.filter(age__lte=age_max)
-        if gender:
-            matches = matches.filter(gender=gender)
-        if location:
-            matches = matches.filter(location__icontains=location)
-
-    return render(request, 'match_list.html', {'form': form, 'matches': matches})
+def matches(request):
+    # Stub match view
+    return render(request, "matches.html")
